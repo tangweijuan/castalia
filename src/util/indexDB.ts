@@ -98,6 +98,10 @@ const initDb = (db: IDBDatabase): DatabaseOperation => {
 };
 
 export const getDb = (version = 1) => new Promise<DatabaseOperation>((res, rej) => {
+    if (typeof window === 'undefined' || !window.indexedDB) {
+        rej("IndexedDB is not available in this environment.");
+        return;
+    }
     const request = window.indexedDB.open(databaseName, version);
 
     request.onerror = () => {
